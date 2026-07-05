@@ -1,22 +1,21 @@
 use std::{
-    io::{self, BufRead}
+    io::{self, Read}
 };
 
 fn main() {
     let mut handle = io::stdin().lock();
     let mut input = String::new();
-    handle.read_line(&mut input).unwrap();
-    let tokens = parse_tokens(&input);
+    handle.read_to_string(&mut input).unwrap();
+    let mut lines = input.lines();
 
+    let tokens = parse_tokens(lines.next().unwrap());
     let n: i32 = tokens[0].parse().unwrap();
-    input.clear();
 
     let mut queries: Vec<[u32; 3]> = Vec::new();
     queries.reserve(n as usize * 2);
 
     for _ in 0..n {
-         handle.read_line(&mut input).unwrap();
-         let tokens = parse_tokens(&input);
+         let tokens = parse_tokens(lines.next().unwrap());
 
          let a = tokens[0].parse().unwrap();
          let f = tokens[1].parse().unwrap();
@@ -24,7 +23,6 @@ fn main() {
 
          queries.push([a, s, 0]);
          queries.push([f, s, 1]);
-         input.clear();
     }
     queries.sort_by(|arr1, arr2| {
         if arr1[0] != arr2[0] {
